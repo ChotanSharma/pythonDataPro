@@ -41,3 +41,29 @@ print(sibling_1)
 # accessing the next sibling of p, which is h3:
 sibling_2 = sibling_1.next_sibling
 print(sibling_2)
+
+#If the tag has attributes, the tag id="boldest" has 
+# an attribute id whose value is boldest. 
+# You can access a tag’s attributes by treating the tag like a dictionary:
+tag_attr = tag_child['id']
+print(tag_attr)
+
+#accessing the dictionary of attributes:
+tag_attr = tag_child.attrs
+print(tag_attr)
+
+# accessing the value of attribute id using python get method:
+print(tag_child.get('id'))
+
+# Beautiful Soup uses the NavigableString class to contain this text. 
+# In our HTML we can obtain the name of the first player by 
+# extracting the sting of the Tag
+tag_string = tag_child.string
+print(tag_string)
+
+# We can check the type of the object tag_string:
+print(type(tag_string))
+
+# covert it to sting object in Python from soup NavigableString object:
+str_tag = str(tag_string)
+print(type(str_tag))
