@@ -68,23 +68,86 @@ warnings.filterwarnings("ignore", category=UserWarning, module='requests')
 # str_tag = str(tag_string)
 # print(type(str_tag))
 
-table="<table><tr><td id='flight' >Flight No</td><td>Launch site</td><td>Payload mass</td></tr><tr><td>1</td><td><a href='https://en.wikipedia.org/wiki/Florida'>Florida</a></td><td>300 kg</td></tr><tr><td>2</td><td><a href='https://en.wikipedia.org/wiki/Texas'>Texas</a></td><td>94 kg</td></tr><tr><td>3</td><td><a href='https://en.wikipedia.org/wiki/Florida'>Florida</a> </td><td>80 kg</td></tr></table>"
-table_soup = BeautifulSoup(table, 'html.parser')
+# table="<table><tr><td id='flight' >Flight No</td><td>Launch site</td><td>Payload mass</td></tr><tr><td>1</td><td><a href='https://en.wikipedia.org/wiki/Florida'>Florida</a></td><td>300 kg</td></tr><tr><td>2</td><td><a href='https://en.wikipedia.org/wiki/Texas'>Texas</a></td><td>94 kg</td></tr><tr><td>3</td><td><a href='https://en.wikipedia.org/wiki/Florida'>Florida</a> </td><td>80 kg</td></tr></table>"
+# table_soup = BeautifulSoup(table, 'html.parser')
 
-# Extracting all the rows of the table
-table_bs = table_soup.find_all('tr')
-for i,row in enumerate(table_bs):
-    print("row",i)
-    cells=row.find_all('td')
-    for j,cell in enumerate(cells):
-        print('colunm',j,"cell:",cell)
+# # Extracting all the rows of the table
+# table_bs = table_soup.find_all('tr')
+# for i,row in enumerate(table_bs):
+#     print("row",i)
+#     cells=row.find_all('td')
+#     for j,cell in enumerate(cells):
+#         print('colunm',j,"cell:",cell)
 
-# Extracting all the rows of the table using id
-table_soup.find_all(id="flight")
+# # Extracting all the rows of the table using id
+# table_soup.find_all(id="flight")
 
-# Extracting all the a tag with href
-list_input=table_soup.find_all(href="https://en.wikipedia.org/wiki/Florida")
-print(list_input)
+# # Extracting all the a tag with href
+# list_input=table_soup.find_all(href="https://en.wikipedia.org/wiki/Florida")
+# print(list_input)
 
-print(table_soup.find_all(href=True))  # all a tags with href
+# print(table_soup.find_all(href=True))  # all a tags with href
 
+# url = "https://web.archive.org/web/20230224123642/https://www.ibm.com/us-en/"
+
+# data  = requests.get(url).text
+
+# soup = BeautifulSoup(data, 'html.parser')
+
+# # Extracting all the a tag with href
+# for link in soup.find_all('a',href=True):  
+#     print(link.get('href'))
+
+
+import pandas as pd
+
+#The below url contains html tables with data about world population.
+url = "https://en.wikipedia.org/wiki/World_population"
+
+# get the contents of the webpage in text format and store in a variable called data
+headers = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                  "AppleWebKit/537.36 (KHTML, like Gecko) "
+                  "Chrome/91.0.4472.124 Safari/537.36"
+}
+
+data  = requests.get(url, headers=headers).text
+
+soup = BeautifulSoup(data, 'html.parser')
+
+#find all html tables in the web page
+tables = soup.find_all('table') # in html table is represented by the tag <table>
+# we can see how many tables were found by checking the length of the tables list
+print(len(tables))
+
+for index,table in enumerate(tables):
+    if ("10 most densely populated countries" in str(table)):
+        table_index = index
+print(table_index)
+
+# print(tables[table_index].prettify())
+
+# population_data = pd.DataFrame(columns=["Rank", "Country", "Population", "Area", "Density"])
+
+# for row in tables[table_index].tbody.find_all("tr"):
+#     col = row.find_all("td")
+#     if col:
+#         rank = col[0].text.strip()
+#         country = col[1].text.strip()
+#         population = col[2].text.strip()
+#         area = col[3].text.strip()
+#         density = col[4].text.strip()
+
+#         # Create a temporary DataFrame for the new row
+#         new_row = pd.DataFrame([{"Rank": rank, "Country": country, "Population": population, "Area": area, "Density": density}])
+
+#         # Use concat 
+#         population_data = pd.concat([population_data, new_row], ignore_index=True)
+
+
+
+pd.read_html(str(tables[5]), flavor='bs4')
+
+population_data_read_html = pd.read_html(str(tables[5]), flavor='bs4')[0]
+
+print(population_data_read_html)
